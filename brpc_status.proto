@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option go_package = "github.com/baidu-golang/baidurpc";
+
+
+message RPCStatus {
+  string host = 1;
+	int32 port = 2;
+	int32 timeout = 3;
+	repeated RPCMethod methods = 4;
+	
+	
+}
+
+message RPCMethod {
+	string service = 1;
+	string method = 2;
+	string InTypeMeta =3;
+	string ReturnTypeMeta = 4;
+}
+
+message QpsData {
+	map<int64, int32> qpsinfo = 1;
+}

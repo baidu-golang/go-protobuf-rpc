@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option go_package = "github.com/baidu-golang/baidurpc";
+
+message RpcMeta {
+  Request request = 1;
+  Response response = 2;
+  int32 compress_type = 3; // 0:nocompress 1:Snappy 2:gzip
+  int64 correlation_id = 4;
+  int32 attachment_size = 5;
+  ChunkInfo chuck_info = 6;
+  bytes authentication_data = 7;
+};
+
+message Request {
+  string service_name = 1;
+  string method_name = 2;
+  int64 log_id = 3;
+  int64 traceId = 4;
+  int64 spanId = 5;
+  int64 parentSpanId = 6;
+  repeated RpcRequestMetaExtField rpcRequestMetaExt = 7;
+
+  bytes extraParam = 110;
+};
+
+message Response {
+  int32 error_code = 1;
+  string error_text = 2;
+};
+
+message ChunkInfo {
+  int64 stream_id = 1;
+  int64 chunk_id = 2;
+};
+
+message RpcRequestMetaExtField {
+  string key = 1;
+  string value = 2;
+};
