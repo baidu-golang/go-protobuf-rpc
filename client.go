@@ -240,7 +240,7 @@ func (c *RpcClient) safeReceive() (*RpcDataPackage, error) {
 }
 
 // asyncRequest
-func (c *RpcClient) asyncRequest(timeout time.Duration, request *RpcDataPackage, ch chan *RpcDataPackage) {
+func (c *RpcClient) asyncRequest(timeout time.Duration, request *RpcDataPackage, responseCh chan *RpcDataPackage) {
 	// create a task bind with key, data and  time out call back function.
 	t := &timewheel.Task[*RpcDataPackage]{
 		Data: request, // business data
@@ -250,7 +250,7 @@ func (c *RpcClient) asyncRequest(timeout time.Duration, request *RpcDataPackage,
 			task.Data.ErrorCode(errorcode)
 			errormsg := fmt.Sprintf("request time out of %v", task.Delay())
 			task.Data.ErrorText(errormsg)
-			ch <- request
+			responseCh <- request
 		}}
 
 	// add task and return unique task id
@@ -261,7 +261,7 @@ func (c *RpcClient) asyncRequest(timeout time.Duration, request *RpcDataPackage,
 		errormsg := err.Error()
 		request.ErrorText(errormsg)
 
-		ch <- request
+		responseCh <- request
 		return
 	}
 
@@ -272,18 +272,18 @@ func (c *RpcClient) asyncRequest(timeout time.Duration, request *RpcDataPackage,
 		}
 	}()
 
-	rsp, err := c.doSendReceive(request, ch)
+	rsp, err := c.doSendReceive(request, responseCh)
 	if err != nil {
 		errorcode := int32(ST_ERROR)
 		request.ErrorCode(errorcode)
 		errormsg := err.Error()
 		request.ErrorText(errormsg)
 
-		ch <- request
+		responseCh <- request
 		return
 	}
 
-	ch <- rsp
+	responseCh <- rsp
 }
 
 func (c *RpcClient) doSendReceive(rpcDataPackage *RpcDataPackage, ch <-chan *RpcDataPackage) (*RpcDataPackage, error) {

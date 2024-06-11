@@ -6,7 +6,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,6 +21,7 @@ import (
 	"time"
 
 	baidurpc "github.com/baidu-golang/pbrpc"
+	"github.com/jhunters/goassist/conv"
 	. "github.com/smartystreets/goconvey/convey"
 	"google.golang.org/protobuf/proto"
 )
@@ -223,7 +224,7 @@ func testSendRpc(testName string, client *baidurpc.RpcClient, timeout, auth bool
 // createRpcServer create rpc server by port and localhost
 func createRpcServerWithChunkSize(port int, chunksize uint32) *baidurpc.TcpServer {
 	serverMeta := baidurpc.ServerMeta{}
-	serverMeta.Port = Int(port)
+	serverMeta.Port = conv.ToPtr(port)
 	serverMeta.ChunkSize = chunksize
 	rpcServer := baidurpc.NewTpcServer(&serverMeta)
 	return rpcServer

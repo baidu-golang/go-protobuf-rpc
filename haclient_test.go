@@ -25,6 +25,7 @@ import (
 	"time"
 
 	baidurpc "github.com/baidu-golang/pbrpc"
+	"github.com/jhunters/goassist/conv"
 	. "github.com/smartystreets/goconvey/convey"
 	"google.golang.org/protobuf/proto"
 )
@@ -38,7 +39,7 @@ func TestHaClient(t *testing.T) {
 		host := "localhost"
 		timeout := time.Second * 5
 		errPort := 100
-		urls := []baidurpc.URL{{Host: &host, Port: &errPort}, {Host: &host, Port: Int(PORT_1)}}
+		urls := []baidurpc.URL{{Host: &host, Port: &errPort}, {Host: &host, Port: conv.ToPtr(PORT_1)}}
 
 		connections, err := baidurpc.NewBatchTCPConnection(urls, timeout)
 		So(err, ShouldBeNil)

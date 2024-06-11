@@ -6,7 +6,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,7 @@ import (
 	"time"
 
 	baidurpc "github.com/baidu-golang/pbrpc"
+	"github.com/jhunters/goassist/conv"
 	. "github.com/smartystreets/goconvey/convey"
 	"google.golang.org/protobuf/proto"
 )
@@ -37,7 +38,7 @@ const (
 // createRpcServer create rpc server by port and localhost
 func createRpcServer(port int) *baidurpc.TcpServer {
 	serverMeta := baidurpc.ServerMeta{}
-	serverMeta.Port = Int(port)
+	serverMeta.Port = conv.ToPtr(port)
 	rpcServer := baidurpc.NewTpcServer(&serverMeta)
 	return rpcServer
 }
@@ -60,7 +61,6 @@ func TestServerWithAuthenticate(t *testing.T) {
 		err := rpcServer.Start()
 		So(err, ShouldBeNil)
 		stopRpcServer(rpcServer)
-		So(err, ShouldBeNil)
 	})
 }
 
@@ -72,7 +72,6 @@ func TestServerWithoutPublishMethods(t *testing.T) {
 		err := rpcServer.Start()
 		So(err, ShouldBeNil)
 		stopRpcServer(rpcServer)
-		So(err, ShouldBeNil)
 	})
 }
 
@@ -89,7 +88,6 @@ func TestServerWithPublishMethods(t *testing.T) {
 			err := rpcServer.Start()
 			So(err, ShouldBeNil)
 			stopRpcServer(rpcServer)
-			So(err, ShouldBeNil)
 		})
 
 		Convey("publish method with RegisterNameWithMethodMapping", func() {
@@ -107,7 +105,6 @@ func TestServerWithPublishMethods(t *testing.T) {
 			err := rpcServer.Start()
 			So(err, ShouldBeNil)
 			stopRpcServer(rpcServer)
-			So(err, ShouldBeNil)
 		})
 
 	})
@@ -185,11 +182,4 @@ func TestServerWithOldRegisterWay(t *testing.T) {
 func stopRpcServer(rpcServer *baidurpc.TcpServer) {
 	timeContext, _ := context.WithTimeout(context.Background(), Shutdown_Timeout)
 	rpcServer.Stop(timeContext)
-}
-
-// Int convert to pointer type of int
-func Int(v int) *int {
-	p := new(int)
-	*p = int(v)
-	return p
 }

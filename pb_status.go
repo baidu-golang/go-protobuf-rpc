@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.26.0
 // 	protoc        v3.9.2
-// source: go.proto
+// source: brpc_status.proto
 
 package baidurpc
 
